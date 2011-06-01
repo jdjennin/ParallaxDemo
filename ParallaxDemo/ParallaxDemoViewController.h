@@ -14,6 +14,9 @@
     IBOutlet UIView *pinkClouds;
     
     NSTimer *timer;
+    
+    BOOL fingerDown;
+    CGPoint referencePoint;
 }
 
 @property (nonatomic, retain) IBOutlet UIView *yellowClouds;

@@ -23,7 +23,7 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        
+        fingerDown = NO;
     }
     return self;
 }
@@ -77,9 +77,33 @@
 }
 
 - (void)moveClouds {
+    if (fingerDown) {
+        return;
+    }
+    
     yellowClouds.center = CGPointMake(yellowClouds.center.x+SPEED*TOP_FACTOR, yellowClouds.center.y);
     greenClouds.center = CGPointMake(greenClouds.center.x+SPEED*MIDDLE_FACTOR, greenClouds.center.y);
     pinkClouds.center = CGPointMake(pinkClouds.center.x+SPEED*BOTTOM_FACTOR, pinkClouds.center.y);
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    fingerDown = YES;
+    CGPoint location = [[[event allTouches] anyObject] locationInView:self.view];
+    referencePoint = location;
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    CGPoint currentLocation = [[[event allTouches] anyObject] locationInView:self.view];
+    float distance = currentLocation.x - referencePoint.x;
+    referencePoint = currentLocation;
+    
+    yellowClouds.center = CGPointMake(yellowClouds.center.x+distance*TOP_FACTOR, yellowClouds.center.y);
+    greenClouds.center = CGPointMake(greenClouds.center.x+distance*MIDDLE_FACTOR, greenClouds.center.y);
+    pinkClouds.center = CGPointMake(pinkClouds.center.x+distance*BOTTOM_FACTOR, pinkClouds.center.y);
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    fingerDown = NO;
 }
 
 @end
